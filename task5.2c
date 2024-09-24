@@ -1,0 +1,63 @@
+import tkinter as tk
+import RPi.GPIO as GPIO
+import time
+
+# GPIO setup
+GPIO.setmode(GPIO.BCM)
+red = 17
+blue = 27  # Changed from yellow to blue
+green = 22  # Renamed from blue to green
+
+GPIO.setup(red, GPIO.OUT)
+GPIO.setup(blue, GPIO.OUT)  # Changed from yellow to blue
+GPIO.setup(green, GPIO.OUT)  # Changed from blue to green
+
+# PWM setup
+redpwm = GPIO.PWM(red, 1000)
+bluepwm = GPIO.PWM(blue, 1000)  # Changed from yellow to blue
+greenpwm = GPIO.PWM(green, 1000)  # Changed from blue to green
+
+redpwm.start(0)
+bluepwm.start(0)  # Changed from yellow to blue
+greenpwm.start(0)  # Changed from blue to green
+
+# GUI function to update LED intensities
+def update_intensities(event):
+    redintensity = int(redslider.get())
+    blueintensity = int(blueslider.get())  # Changed from yellow to blue
+    greenintensity = int(greenslider.get())  # Changed from blue to green
+
+    redpwm.ChangeDutyCycle(redintensity)
+    bluepwm.ChangeDutyCycle(blueintensity)  # Changed from yellow to blue
+    greenpwm.ChangeDutyCycle(greenintensity)  # Changed from blue to green
+
+# GUI creation
+root = tk.Tk()
+root.title("LED Intensity Control")
+root.geometry("380x100")
+
+# Create a frame to hold the sliders
+slider_frame = tk.Frame(root)
+slider_frame.pack(pady=10)
+
+# Red LED intensity slider
+redslider = tk.Scale(slider_frame, from_=0, to=100, orient=tk.HORIZONTAL, command=update_intensities, label="Red", fg="red")
+redslider.grid(row=0, column=0, padx=10)
+
+# Blue LED intensity slider (changed from yellow to blue)
+blueslider = tk.Scale(slider_frame, from_=0, to=100, orient=tk.HORIZONTAL, command=update_intensities, label="Blue", fg="blue")
+blueslider.grid(row=0, column=1, padx=10)
+
+# Green LED intensity slider (renamed from blue to green)
+greenslider = tk.Scale(slider_frame, from_=0, to=100, orient=tk.HORIZONTAL, command=update_intensities, label="Green", fg="green")
+greenslider.grid(row=0, column=2, padx=10)
+
+# Exit button with black text
+exitbutton = tk.Button(root, text="Exit", command=root.quit, fg="black")
+exitbutton.pack(pady=20)
+
+# Start the GUI
+root.mainloop()
+
+# Cleanup GPIO
+GPIO.cleanup()
